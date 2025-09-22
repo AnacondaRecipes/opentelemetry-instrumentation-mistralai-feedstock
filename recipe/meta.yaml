@@ -1,49 +1,57 @@
 {% set name = "opentelemetry-instrumentation-mistralai" %}
-{% set version = "0.47.3" %}
+{% set version = "0.47.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/opentelemetry_instrumentation_mistralai-{{ version }}.tar.gz
-  sha256: 1e90daca4cda6e38f32615f55fbd60d98194ddd455ba1a3a7d44d89454b0a5dd
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
+  sha256: 8da9e49fd0112b75240835cb62eae8eabe54db1c183192214225b7e61352db9f
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<39]
 
 requirements:
   host:
-    - python {{ python_min }}
-    - poetry-core
     - pip
+    - python
+    - poetry-core
   run:
-    - python >={{ python_min }}
+    - python
     - opentelemetry-api >=1.28.0,<2.0.0
     - opentelemetry-instrumentation >=0.50b0
     - opentelemetry-semantic-conventions >=0.50b0
-    - opentelemetry-semantic-conventions-ai >=0.4.12,<0.5.0
+    - opentelemetry-semantic-conventions-ai >=0.4.13,<0.5.0
+  run_constrained:
+    - mistralai >=1.0.0,<2.0.0
 
+# Need to be authorized to run tests:
+# E   mistralai.models.sdkerror.SDKError: API error occurred: Status 401
+# E   {"detail":"Unauthorized"}
 test:
   imports:
     - opentelemetry.instrumentation.mistralai
   commands:
     - pip check
   requires:
-    - mistralai >=1,<2
     - pip
-    - python {{ python_min }}
+    - mistralai >=1.0.0,<2.0.0
 
 about:
   home: https://www.traceloop.com/openllmetry
-  dev_url: https://github.com/traceloop/openllmetry
-  doc_url: https://www.traceloop.com/docs/openllmetry/introduction
   summary: OpenTelemetry Mistral AI instrumentation
   license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
+  description: This library allows tracing calls to any of mistralai's endpoints sent with the official Mistral AI library.
+  dev_url: https://github.com/traceloop/openllmetry
+  doc_url: https://www.traceloop.com/docs/openllmetry/introduction
 
 extra:
   recipe-maintainers:
     - timkpaine
+  skip-lints:
+    - invalid_url

@@ -54,4 +54,4 @@ extra:
   recipe-maintainers:
     - timkpaine
   skip-lints:
-    - reachableß_url
+    - reachable_url

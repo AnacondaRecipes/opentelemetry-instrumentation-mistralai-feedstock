@@ -1,5 +1,5 @@
 {% set name = "opentelemetry-instrumentation-mistralai" %}
-{% set version = "0.49.6" %}
+{% set version = "0.57.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,24 +7,24 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
-  sha256: 244f94b2354acc35eb47a126d56fbebf6a74cdd280d0f4b9b6204917ed8c950b
+  sha256: b632f10893db7382fb3fa7b355d10d76ebe87bfa6e5768344f1e701c050e7961
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: true  # [py<39]
+  skip: true  # [py<310]
 
 requirements:
   host:
     - pip
     - python
-    - poetry-core
+    - hatchling
   run:
     - python
     - opentelemetry-api >=1.38.0,<2.0.0
     - opentelemetry-instrumentation >=0.59b0
     - opentelemetry-semantic-conventions >=0.59b0
-    - opentelemetry-semantic-conventions-ai >=0.4.13,<0.5.0
+    - opentelemetry-semantic-conventions-ai >=0.5.1,<0.6.0
   run_constrained:
     - mistralai >=1.0.0,<2.0.0
 
@@ -54,4 +54,4 @@ extra:
   recipe-maintainers:
     - timkpaine
   skip-lints:
-    - invalid_url
+    - reachable_url
